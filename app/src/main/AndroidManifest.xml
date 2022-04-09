@@ -10,6 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GroupPlus">
         <activity
+            android:name=".GroupActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
