@@ -32,7 +32,7 @@ public class GroupActivity extends AppCompatActivity {
     private FirebaseUser currUser;
     private DatabaseReference mProgressReference;
     private int goal = 12;
-    private HashMap<String, Integer> memberProg;
+    private int userProg = 0;
     //TODO add uuid for groups
     private int groupID = 1;
 
@@ -69,6 +69,9 @@ public class GroupActivity extends AppCompatActivity {
                     String uid = uidItr.next();
                     try {
                         sumProgress += jsonObject.getInt(uid);
+                        if(uid.equals(currUser.getUid())) {
+                            userProg = jsonObject.getInt(uid);
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -76,10 +79,10 @@ public class GroupActivity extends AppCompatActivity {
 
                 ProgressBar bookProgress = findViewById(R.id.book_progress_bar);
                 int progress = (int) ((float) sumProgress / (float) goal * 100);
-                bookProgress.setProgress(progress);
+                bookProgress.setProgress(progress, true);
 
                 TextView progressText = findViewById(R.id.book_progress_text);
-                progressText.setText(sumProgress + "/" + goal + " Books");
+                progressText.setText(Integer.min(sumProgress, goal) + "/" + goal + " Books");
                 Log.d(TAG, progressText.getText().toString());
             }
 
@@ -97,7 +100,7 @@ public class GroupActivity extends AppCompatActivity {
             EditText num1View = this.findViewById(R.id.books_read);
 
             int num1Text = Integer.parseInt(num1View.getText().toString());
-            mDatabase.child("progress").child(currUser.getUid()).setValue(num1Text);
+            mDatabase.child("progress").child(currUser.getUid()).setValue(userProg + num1Text);
             Log.d(TAG, "Updated value in database: " + num1Text);
         });
     }
